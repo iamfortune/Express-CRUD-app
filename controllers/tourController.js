@@ -1,33 +1,41 @@
 const Tour = require('./../models/tourModel');
 
 // ROUTE HANDLERS
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime
-    // results: tours.length,
-    // data: {
-    //   tours: tours
-    // }
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    });
+  } catch (error) {
+    res.send(404).json({
+      status: 'failed',
+      message: error
+    });
+  }
 };
 
-exports.getTour = (req, res) => {
-  console.log(req.params);
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
 
-  const id = req.params.id * 1; // we converted the id string to number
-
-  // const tour = tours.find(
-  //   el => el.id === id
-  // ); /** here we loop through the tours and try to find the element whose id matches the one we are looking for */
-
-  // res.status(200).json({
-  //   status: 'success',
-  //   data: {
-  //     tour
-  //   }
-  // });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 exports.createTour = async (req, res) => {
@@ -48,11 +56,20 @@ exports.createTour = async (req, res) => {
   }
 };
 
-exports.updateTour = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: { tour: '<Updated tour ....>' }
-  });
+exports.updateTour = async (req, res) => {
+  try {
+    Tour.findByIdAndUpdate(req.params.id)
+
+    res.status(200).json({
+      status: 'success',
+      data: { tour: '<Updated tour ....>' }
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 exports.deleteTour = (req, res) => {
