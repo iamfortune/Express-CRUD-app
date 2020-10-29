@@ -1,10 +1,27 @@
+const { query } = require('express');
 const Tour = require('./../models/tourModel');
 
 // ROUTE HANDLERS
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // BUILD QUERY
+    // FILTERING QUERY
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach(el => delete queryObj[el]);
 
+    const query = Tour.find(queryObj);
+
+    console.log(req.query);
+
+    // { difficulty: 'easy', duration: { $gte: 5 } }
+
+    // EXECUTE QUERY
+    const tours = await query;
+
+    // an advanced filter  { difficulty: 'easy', duration: {$gte: 5}}
+
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
