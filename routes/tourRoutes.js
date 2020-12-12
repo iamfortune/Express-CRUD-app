@@ -3,8 +3,6 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
-// router.param(`id`, tourController.checkID);
-
 router
   .route('/')
   .get(tourController.getAllTours)
@@ -17,5 +15,3 @@ router
   .delete(tourController.deleteTour);
 
 module.exports = router;
-
-// here we are doing this cos we are just exporting one thing, the router
